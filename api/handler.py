@@ -1,29 +1,50 @@
-import os
+import time
 import openai
-from flask import Flask, request, jsonify
+from flask import Flask, render_template, request, jsonify
 
-app = Flask(_name_)
+app = Flask(__name__)
 
-openai.api_key = os.getenv("")  # Set your OpenAI API key here
+openai.api_key = "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"
 
-@app.route("/", methods=["POST"])
-def generate_text():
+max_tokens = 1000
+conversation_history = []
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_input = request.form['user_input']
+    ai_response = generate_response(user_input)
+    return jsonify({'response': ai_response})
+
+def generate_response(user_input):
+    global conversation_history
+
     try:
-        data = request.get_json()
-        prompt = data["prompt"]
-        
+        conversation_history.append("User: " + user_input)
+        conversation_text = "\n".join(conversation_history[-50:])
+        formatted_prompt = "Conversation History:\n" + conversation_text
+
         response = openai.Completion.create(
             engine="text-davinci-003",
-            prompt=prompt,
-            max_tokens=100
+            prompt=formatted_prompt,
+            max_tokens=max_tokens - len(formatted_prompt.split())
         )
-        
-        generated_text = response.choices[0].text.strip()
-        
-        return jsonify({"generated_text": generated_text})
-    
-    except Exception as e:
-        return jsonify({"error": str(e)})
 
-if __name__ == "__main__":
+        new_text = response.choices[0].text.strip()
+        conversation_history.append("AI: " + new_text)
+        return new_text
+    except openai.error.RateLimitError as e:
+        print("Rate limit exceeded. Waiting for 60 seconds before retrying...")
+        time.sleep(60)
+        return generate_response(user_input)
+    except openai.error.TooManyTokensError as e:
+        print("Token limit exceeded. Truncating conversation history and retrying...")
+        tokens_to_remove = len(conversation_history[0].split())
+        conversation_history = conversation_history[tokens_to_remove:]
+        return generate_response(user_input)
+
+if __name__ == '__main__':
     app.run(debug=True)
