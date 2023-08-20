@@ -1,6 +1,6 @@
 LLM Wrapper App
-This project deploys a Language Model (LLM) wrapper as a Serverless function using Flask and Vercel.
-The wrapper interacts with the OpenAI API to generate text based on user prompts while handling rate limit errors, maintaining conversation history, and formatting prompts.
+This project implements a Language Model (LLM) wrapper using Flask to interact with the OpenAI API.
+The wrapper  handle rate limit errors, maintains conversation history, and formats prompts as per the conversation sequence.
 
 Features
 1.Rate Limit Handling: The wrapper handles rate limit errors by retrying after waiting for a specific period.
