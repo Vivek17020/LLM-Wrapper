@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 max_tokens = 1000
 conversation_history = []
