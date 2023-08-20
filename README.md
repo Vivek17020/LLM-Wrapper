@@ -1,4 +1,5 @@
 LLM Wrapper App
+
 This project implements a Language Model (LLM) wrapper using Flask to interact with the OpenAI API.
 The wrapper  handle rate limit errors, maintains conversation history, and formats prompts as per the conversation sequence.
 
