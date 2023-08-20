@@ -3,6 +3,7 @@ This project implements a Language Model (LLM) wrapper using Flask to interact w
 The wrapper  handle rate limit errors, maintains conversation history, and formats prompts as per the conversation sequence.
 
 Features
+
 1.Rate Limit Handling: The wrapper handles rate limit errors by retrying after waiting for a specific period.
 
 2.Conversation History: The wrapper maintains the history of the conversation to ensure a sequence of user inputs and prompts.
